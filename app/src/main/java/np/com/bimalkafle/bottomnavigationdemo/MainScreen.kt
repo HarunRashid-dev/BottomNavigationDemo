@@ -7,6 +7,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.Badge
+import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -19,14 +21,17 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import np.com.bimalkafle.bottomnavigationdemo.pages.HomePage
+import np.com.bimalkafle.bottomnavigationdemo.pages.NotificationPage
+import np.com.bimalkafle.bottomnavigationdemo.pages.SettingsPage
 
 @Composable
 fun MainScreen(modifier: Modifier = Modifier){
 
     val navItemList = listOf(
-        NavItem("Home", Icons.Default.Home),
-        NavItem("Notification", Icons.Default.Notifications),
-        NavItem("Settings", Icons.Default.Settings),
+        NavItem("Home", Icons.Default.Home,0),
+        NavItem("Notification", Icons.Default.Notifications,5),
+        NavItem("Settings", Icons.Default.Settings,0),
     )
 
     var selectedIndex by remember{
@@ -44,7 +49,14 @@ fun MainScreen(modifier: Modifier = Modifier){
                             selectedIndex = index
                         },
                         icon = {
-                            Icon(imageVector = navItem.icon, contentDescription = "Icon")
+                            BadgedBox(badge = {
+                                if(navItem.badgeCount>0)
+                                Badge(){
+                                    Text(text = navItem.badgeCount.toString())
+                                }
+                            }) {
+                                Icon(imageVector = navItem.icon, contentDescription = "Icon")
+                            }
                         },
                         label = {
                             Text(text = navItem.label)
@@ -54,11 +66,15 @@ fun MainScreen(modifier: Modifier = Modifier){
             }
         }
     ) { innerPadding ->
-        ContentScreen(modifier = Modifier.padding(innerPadding))
+        ContentScreen(modifier = Modifier.padding(innerPadding),selectedIndex)
     }
 }
 
 @Composable
-fun ContentScreen(modifier: Modifier = Modifier){
-
+fun ContentScreen(modifier: Modifier = Modifier,selectedIndex : Int){
+    when(selectedIndex){
+        0-> HomePage()
+        1-> NotificationPage()
+        2-> SettingsPage()
+    }
 }
